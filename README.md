@@ -8,10 +8,6 @@
 
 > Most of this repository's normative content (rubrics, agent instructions, precedents, decision logs) is written in Korean — it's the language the underlying governance system was authored and audited in. This README explains the system in English; translating the normative documents themselves was intentionally skipped to avoid semantic drift from the text the hooks actually enforce. See the [Korean README](README.ko.md) if you want the native-language walkthrough.
 
-## Background
-
-This template came out of actually running an AI-driven expense-approval pipeline in production. The starting assumption was "give it a rubric and let it judge" — but that quickly ran into the same input producing different verdicts on different runs, citations that looked grounded but weren't actually in the source text, and an obviously-approvable case getting kicked to a human over and over for no good reason. Working through that produced a human decision and its reasoning, recorded as [precedent case-001](knowledge/precedents/case-001.md) and [case-002](knowledge/precedents/case-002.md), and a schema-validation hook plus golden-set regression built to keep those failures from recurring. This template packages that hardened structure so you don't have to relearn it from scratch.
-
 ## Purpose
 
 **Make repeated AI judgments reproducible and auditable.** The judgment itself is still made by AI, but whether it followed the schema, whether its evidence actually exists in the source text, and whether the same data produces the same conclusion are checked deterministically by code instead of by a human eyeballing every output. Points of disagreement are automatically routed to a human, and that human's ruling becomes a precedent that grounds future judgments.
