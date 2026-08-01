@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-08-01T074410Z_b9a3145f",
+  "timestamp": "2026-08-01T074410Z",
+  "input_hash": "sha256:b9a3145f867242453e2401d5ae6bd1b0837be64a1074fa2ab9e56d39119c0d21",
+  "schema_version": "judgment@1.0.0",
+  "outputs": {
+    "analyst": {
+      "verdict": "approve",
+      "confidence": "high",
+      "escalate": false,
+      "evidence_count": 9
+    },
+    "critic": {
+      "verdict": "objection_raised",
+      "confidence": "medium",
+      "escalate": true,
+      "evidence_count": 22
+    },
+    "independent": {
+      "verdict": "approve",
+      "confidence": "high",
+      "escalate": false,
+      "evidence_count": 10
+    },
+    "synthesizer": {
+      "verdict": "needs_review",
+      "confidence": "high",
+      "escalate": true,
+      "evidence_count": 25
+    },
+    "verifier": {
+      "verdict": "verification_complete",
+      "confidence": "high",
+      "escalate": false,
+      "evidence_count": 19
+    }
+  },
+  "verification": {
+    "schema_pass": true,
+    "citations_pass": true
+  },
+  "routing": "escalated",
+  "escalation_reason": "needs_review"
+}

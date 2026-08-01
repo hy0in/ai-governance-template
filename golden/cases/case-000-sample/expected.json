@@ -1,0 +1,9 @@
+{
+  "case_id": "case-000-sample",
+  "rubric": "normative/rubrics/expense-review.md",
+  "input": "golden/cases/case-000-sample/input/expense-001.md",
+  "expected_verdict": "approve",
+  "allow_escalate": false,
+  "required_evidence_sources": ["golden/cases/case-000-sample/input/expense-001.md"],
+  "notes": "금액 48,000원은 식비 한도 50,000원 이하이고 날짜·금액·용도 모두 기재, 용도 '고객 미팅'은 허용 목록에 포함. 명백한 approve 케이스."
+}

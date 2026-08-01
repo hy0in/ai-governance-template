@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Judgment",
+  "description": "모든 에이전트 판단 산출물의 공통 스키마. 버전: 1.0.0",
+  "type": "object",
+  "required": ["agent_role", "verdict", "confidence", "evidence", "escalate"],
+  "additionalProperties": false,
+  "properties": {
+    "agent_role": { "enum": ["analyst", "independent", "critic", "verifier", "synthesizer"] },
+    "verdict": { "type": "string", "description": "루브릭에 정의된 판정값만 허용" },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "evidence": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["quote", "source_location", "directness"],
+        "additionalProperties": false,
+        "properties": {
+          "quote": { "type": "string", "minLength": 1, "description": "원문에서 그대로 복사한 문자열" },
+          "source_location": { "type": "string", "description": "상대경로 또는 상대경로:행번호" },
+          "directness": { "enum": ["direct", "inferred"] }
+        }
+      }
+    },
+    "alternative_hypotheses": { "type": "array", "items": { "type": "string" } },
+    "escalate": { "type": "boolean" },
+    "escalation_reason": { "type": ["string", "null"] },
+    "rubric_version": { "type": "string" }
+  }
+}

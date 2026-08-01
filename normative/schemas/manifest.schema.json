@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RunManifest",
+  "type": "object",
+  "required": ["run_id", "timestamp", "input_hash", "outputs", "verification", "routing"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "input_hash": {
+      "type": "string",
+      "description": "입력 데이터 파일 내용의 해시. 같은 입력이면 회차·판정 결과와 무관하게 동일해야 한다. 입력 파일을 특정하지 못하면 'unresolved:' 접두사 문자열."
+    },
+    "input_files": {
+      "type": "array",
+      "description": "input_hash 산출에 포함된 입력 파일 목록",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "properties": { "path": { "type": "string" }, "sha256": { "type": "string" } }
+      }
+    },
+    "outputs_hash": {
+      "type": "string",
+      "description": "판정 결과(outputs)의 해시. 같은 입력이라도 판정이 다르면 달라진다. 재현성 대조는 input_hash가 같은 매니페스트끼리 outputs_hash를 비교해서 한다."
+    },
+    "schema_version": { "type": "string" },
+    "rubric_version": { "type": "string" },
+    "model": { "type": "string" },
+    "outputs": { "type": "object" },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "schema_pass": { "type": "boolean" },
+        "citations_pass": { "type": "boolean" },
+        "citation_failures": { "type": "array" }
+      }
+    },
+    "routing": { "enum": ["auto_confirmed", "escalated", "incomplete"] },
+    "escalation_reason": { "type": ["string", "null"] }
+  }
+}

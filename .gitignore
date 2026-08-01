@@ -1,0 +1,7 @@
+.obsidian/
+.venv/
+runs/current/*
+!runs/current/.gitkeep
+__pycache__/
+*.pyc
+.DS_Store

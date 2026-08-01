@@ -1,0 +1,87 @@
+name: normative-check
+
+# 규범 자산(normative/) 또는 훅·에이전트(.claude/) 변경 PR에 대한 최소 정적 검사.
+#
+# 여기서는 claude CLI를 실행하지 않는다 — 실제 앙상블 회귀
+# (`golden/run_regression.py --repeat 5`)는 인증과 수 분~수십 분의 실행
+# 시간이 필요하므로 항상 로컬에서 사람이 돌리고, 병합 전 통과를 확인한다
+# (docs/operations.md 참조). 이 워크플로는 그 전에 걸러낼 수 있는
+# 문법·형식 오류만 잡는다.
+
+on:
+  pull_request:
+    paths:
+      - "normative/**"
+      - ".claude/**"
+      - "golden/**"
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성 설치
+        run: pip install jsonschema
+
+      - name: 훅 스크립트 문법 검사
+        run: |
+          set -e
+          for f in .claude/hooks/*.py; do
+            echo "compiling $f"
+            python3 -m py_compile "$f"
+          done
+
+      - name: settings.json / 스키마 JSON 유효성 검사
+        run: |
+          python3 - <<'PY'
+          import json, glob, sys
+          import jsonschema
+
+          files = [".claude/settings.json"] + glob.glob("normative/schemas/*.json")
+          ok = True
+          for f in files:
+              try:
+                  with open(f, encoding="utf-8") as fh:
+                      data = json.load(fh)
+              except Exception as e:
+                  print(f"::error file={f}::JSON 파싱 실패: {e}")
+                  ok = False
+                  continue
+              if f.startswith("normative/schemas/"):
+                  try:
+                      jsonschema.Draft7Validator.check_schema(data)
+                  except jsonschema.SchemaError as e:
+                      print(f"::error file={f}::스키마 자체가 유효하지 않음: {e.message}")
+                      ok = False
+          sys.exit(0 if ok else 1)
+          PY
+
+      - name: 골든 셋 드라이런 (케이스 목록 확인만, claude 호출 없음)
+        run: python3 golden/run_regression.py --dry
+
+      - name: 골든 케이스 expected.json 스키마 정합성
+        run: |
+          python3 - <<'PY'
+          import json, glob, sys
+
+          required = ["case_id", "rubric", "input", "expected_verdict"]
+          ok = True
+          for f in glob.glob("golden/cases/*/expected.json"):
+              with open(f, encoding="utf-8") as fh:
+                  d = json.load(fh)
+              missing = [k for k in required if k not in d]
+              if missing:
+                  print(f"::error file={f}::필수 필드 누락 {missing}")
+                  ok = False
+              for path_key in ("rubric", "input"):
+                  import os
+                  if not os.path.isfile(d.get(path_key, "")):
+                      print(f"::error file={f}::{path_key}가 가리키는 파일이 없음: {d.get(path_key)}")
+                      ok = False
+          sys.exit(0 if ok else 1)
+          PY

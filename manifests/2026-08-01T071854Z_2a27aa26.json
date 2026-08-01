@@ -1,0 +1,26 @@
+{
+  "run_id": "2026-08-01T071854Z_2a27aa26",
+  "timestamp": "2026-08-01T071854Z",
+  "input_hash": "sha256:2a27aa263ab8e59e9028c735b14e29b5aa29d6ffbeec898cda2c6876ec008194",
+  "schema_version": "judgment@1.0.0",
+  "outputs": {
+    "analyst": {
+      "verdict": "approve",
+      "confidence": "high",
+      "escalate": false,
+      "evidence_count": 9
+    },
+    "independent": {
+      "verdict": "approve",
+      "confidence": "high",
+      "escalate": false,
+      "evidence_count": 10
+    }
+  },
+  "verification": {
+    "schema_pass": true,
+    "citations_pass": true
+  },
+  "routing": "incomplete",
+  "escalation_reason": null
+}
